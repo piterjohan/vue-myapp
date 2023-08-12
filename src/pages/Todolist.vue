@@ -20,6 +20,7 @@ let todoInput = 'Learning ' + generateTodo[randomNumber];
 
 const submitTodo = (event) => {
   const todoStorage = getStorage(storageName);
+  todoInput = '';
 
   todos.value.push({ isDone: false, name: event.target.value });
   
@@ -29,7 +30,6 @@ const submitTodo = (event) => {
   }
 
   setStorage(storageName, todos.value);
-  todoInput = '';
 };
 
 const checkedTodo = () => {
