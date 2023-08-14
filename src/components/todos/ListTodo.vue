@@ -13,6 +13,8 @@ defineProps(['todos', 'eventCBName','isDone']);
       >
         <input type="checkbox" :id="index" :value="todo.isDone" v-model="todo.isDone" />
         {{ todo.name }}
+        <!-- delete -->
+        <button class="todo-delete" @click="$emit('deleteTodo', index)">Delete</button>
       </li>
     </template>
     <div class="total-todo">
