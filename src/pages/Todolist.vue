@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import {getStorage, setStorage} from '../utils/localStorage';
+import ListTodoComponent from '../components/todos/ListTodo.vue';
 
 const storageName = "todoStorage";
 const todoStorage = getStorage(storageName);
@@ -19,6 +20,8 @@ const randomNumber = Math.floor(Math.random() * generateTodo.length) ;
 let todoInput = 'Learning ' + generateTodo[randomNumber];
 
 const submitTodo = (event) => {
+  console.log('trigger submitTodo');
+
   const todoStorage = getStorage(storageName);
   todoInput = '';
 
@@ -33,6 +36,7 @@ const submitTodo = (event) => {
 };
 
 const checkedTodo = () => {
+  console.log('trigger checkedTodo');
   setStorage(storageName, todos.value);
 }
 
@@ -54,54 +58,20 @@ const checkedTodo = () => {
         <h1>Todo List Undone</h1>
       </div>
       <div class="list-todo">
-        <ul>
-          <template v-for="(todo, index) in todos">
-            <li v-if="!todo.isDone" :key="index" :class="{ 'undone-todo': !todo.isDone }" @change.prevent="checkedTodo">
-              <input type="checkbox" :id="index" :value="todo.isDone" v-model="todo.isDone" />
-              {{ todo.name }}
-            </li>
-          </template>
-          <div class="total-todo">
-            <small
-              >Total ToDo Undone:
-              <b>{{
-                todos.filter((x) => {
-                  return !x.isDone;
-                }).length
-              }}</b></small
-            >
-          </div>
-        </ul>
+        <ListTodoComponent :todos="todos" @checked-Event="checkedTodo" eventCBName="checkedEvent" :isDone="false"/>
       </div>
 
       <div class="list-todo">
         <div class="title-todo">
           <h1>Todo List Done</h1>
         </div>
-        <ul>
-          <template v-for="(todo, index) in todos">
-            <li v-if="todo.isDone" :key="index" :class="{ 'done-todo': todo.isDone }">
-              <input type="checkbox" :id="index" :value="todo.isDone" v-model="todo.isDone" @change.prevent="checkedTodo"/>
-              {{ todo.name }}
-            </li>
-          </template>
-        </ul>
-        <div class="total-todo">
-          <small
-            >Total ToDo Done:
-            <b>{{
-              todos.filter((x) => {
-                return x.isDone;
-              }).length
-            }}</b></small
-          >
-        </div>
+        <ListTodoComponent :todos="todos" @checked-Event="checkedTodo" eventCBName="checkedEvent" :isDone="true"/>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style>
 .container {
   background-color: gray;
   display: block;
