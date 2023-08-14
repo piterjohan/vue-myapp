@@ -11,7 +11,6 @@ defineProps(['todos', 'eventCBName','isDone']);
         :class="{ 'undone-todo': todo.isDone == isDone}"
         @change="$emit(eventCBName)"
       >
-        {{todo.isDone}}
         <input type="checkbox" :id="index" :value="todo.isDone" v-model="todo.isDone" />
         {{ todo.name }}
       </li>
