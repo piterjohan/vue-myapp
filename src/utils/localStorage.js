@@ -1,5 +1,5 @@
 function getStorage(storageName) {
-  console.log('success get storage');
+  console.log('success get storage ' + storageName);
   return localStorage.getItem(storageName);
 }
 

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { getStorage, setStorage } from '../utils/localStorage';
-import ListTodoComponent from '../components/todos/ListTodo.vue';
+import { getStorage, setStorage } from '../../../utils/localStorage';
+import ListTodoComponent from '../../components/todos/ListTodo.vue';
 
 const storageName = 'todoStorage';
 const todoStorage = getStorage(storageName);
@@ -43,9 +43,7 @@ const deleteTodo = (index) => {
   console.log('trigger deleteTodo');
   todos.value.splice(index,1);
   setStorage(storageName, todos.value);
-
 }
-
 </script>
 
 <template>
@@ -85,7 +83,7 @@ const deleteTodo = (index) => {
           :isDone="true"
         />
       </div>
-    </div>
+    </div> <!--wrapper todo-->
   </div>
 </template>
 

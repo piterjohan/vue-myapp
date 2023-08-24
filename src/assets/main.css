@@ -1,8 +1,26 @@
 body{
-  background-color: gray;
+  background-color: gray !important;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 #app {
   margin: 0 auto;
   font-weight: normal;
+}
+
+.flex{
+  display:flex;
+}
+
+.flex-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-end{
+  display: flex;
+  justify-content: flex-end;
 }
