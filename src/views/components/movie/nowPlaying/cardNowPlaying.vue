@@ -3,40 +3,34 @@ defineProps(['nowPlaying', 'movieGenres']);
 </script>
 
 <template>
-  <div
-    class="card"
-    style="width: 18rem"
-    v-for="(movie, indexMovie) in nowPlaying.results"
-    :key="indexMovie"
-  >
-    <img
-      :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-      class="card-img-top"
-      :alt="movie.title + ' ' + '(' + movie.original_title + ')'"
-    />
+  <div class="carousel__item">
+    <div class="position-relative card" style="width: 18rem">
+      <img
+        :src="'https://image.tmdb.org/t/p/w500' + nowPlaying.poster_path"
+        class="card-img-top"
+        :alt="nowPlaying.title + ' ' + '(' + nowPlaying.original_title + ')'"
+      />
 
-    <div class="card-body">
-      <h5 class="card-title movie-title">{{ movie.title.toUpperCase() }}</h5>
-      <div class="flex genre-list">
-        <template v-for="(genre, indexGenre) in movie.genre_ids" :key="indexGenre">
+      <!-- genre -->
+      <div class="position-absolute genre-list">
+        <template v-for="(genre, indexGenre) in nowPlaying.genre_ids" :key="indexGenre">
           <span class="badge">
             {{ movieGenres.genres.find((genreList) => genreList.id === genre).name }}
           </span>
         </template>
       </div>
-      <p>
-        <b>{{ movie.original_langugage }}</b>
-      </p>
-      <p>Adult: {{ movie.adult ? 'Yes' : 'No' }}</p>
-      <p>Release: {{ movie.release_date }}</p>
-      <p>Rating: {{ (movie.vote_average * 100) / 10 }}%</p>
-      <p class="card-text movie-synopsis">
-        {{ movie.overview }}
-      </p>
 
-      <div class="flex-end">
-        <router-link :to="{ name: 'movie_detail', params: { id: movie.id } }">
-          <button class="detail-movie">Detail Movie</button>
+      <!-- percentage -->
+      <div class="position-absolute rating">
+        <span> {{ Math.round( (nowPlaying.vote_average * 100) / 10) }}% </span>
+      </div>
+
+      <!-- button -->
+      <div class="position-absolute btn-wrapper">
+        <router-link :to="{ name: 'movie_detail', params: { id: nowPlaying.id } }">
+          <button class="btn btn-detail-movie">
+            <i class="bi bi-camera-reels"></i>
+          </button>
         </router-link>
       </div>
     </div>
@@ -44,67 +38,80 @@ defineProps(['nowPlaying', 'movieGenres']);
 </template>
 
 <style scoped>
+@import '../../../../assets/owlCarousel.css';
+
 .card {
   border: 1px solid white;
+  border: 0;
   margin: 0.75rem;
 }
 
 .card-img-top {
   width: 100%;
 }
-.card-body {
-  background-color: gray;
-  display: block;
-  padding: 0.75rem;
-  color: white;
-}
-.card .card-title {
-  margin: 0 !important;
-  font-size: 16px;
-}
-
-.card .card-text {
-  color: white;
-  font-size: 18px;
-  text-align: justify;
-}
-.movie-synopsis {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6; /* Number of lines displayed before it truncate */
-  overflow: hidden;
-}
-.card > .card-body > a {
-  text-align: right;
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-}
-.card > .card-body > a:hover {
-  color: rgb(195, 232, 75);
-}
 .genre-list {
+  width: 100%;
+  background-color: hsla(0, 0%, 0%, 0.5);
+  /* background-color: blue; */
+  z-index: 1;
+  border-color: 1px solid transparent;
+  top: 0;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 5%;
+  justify-content: space-evenly;
+  border-radius: 5px 5px 0px 0px;
+  font-size: 12px;
 }
-
 .genre-list > span {
-  background: linear-gradient(
+  /* background: linear-gradient(
     175deg,
     rgba(255, 255, 255, 1) 0%,
     rgb(196 190 190) 42%,
     rgba(255, 255, 255, 0.9808298319327731) 100%
-  );
-  margin-top: 3%;
-  border-radius: 5px;
-  padding: 5px;
-  color: rgb(68 68 68);
+  ); */
+  margin-bottom: 2%;
+  border-radius: 2px;
+  /* padding: 5px; */
+  /* color: rgb(68 68 68); */
+  color: white;
 }
-.detail-movie {
-  background: rgb(118 118 118);
-  padding: 0.5rem;
-  color: rgb(236, 236, 236);
-  cursor: pointer;
+
+.rating {
+  width: 37px;
+  height: 37px;
+  border: 2px solid rgba(255, 255, 255, 0.504);
+  border-radius: 37px;
+  background: hsla(0, 0%, 0%, 0.5);
+  right: 3%;
+  top: 7%;
+  /* color: rgb(2, 2, 2); */
+  color: white;
+  font-size: 12px;
+}
+.rating > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-weight: bolder;
+}
+
+.btn-wrapper {
+  z-index: 2;
+  bottom: -1px;
+  right: 0;
+}
+.btn-detail-movie {
+  background-color: gray;
+  width: 4em;
+  bottom: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid transparent;
+  border-radius: 5px 0px 0px 0px;
+  color: white;
+}
+.btn-detail-movie:hover {
+  background-color: rgb(95, 124, 162);
 }
 </style>

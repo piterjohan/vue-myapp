@@ -207,6 +207,7 @@ onMounted(async () => {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 20px;
 }
+
 /* media query */
 @media only screen and (max-width: 1024px) {
   .movie-detail .body-detail-movie{
