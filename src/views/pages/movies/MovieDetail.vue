@@ -7,28 +7,43 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const movieId = route.params.id;
 
+let loading= true;
 const baseIMGUrlOriginal = import.meta.env.VITE_IMG_URL_ORIGINAL;
 const baseIMGUrlW500 = import.meta.env.VITE_IMG_URL_w500;
 
 const movie = ref();
 let releaseDate = '';
 
-onMounted(() => {
-  movieByID(movieId)
+onMounted(async () => {
+  await movieByID(movieId)
     .then((response) => {
       movie.value = response;
       releaseDate = formatDate(movie.value.data.release_date);
+      loading = false;
     })
     .catch((e) => {
       console.log('movieByID');
       console.log(e);
+      loading = false;
+
     });
 });
 </script>
 
 <template>
   <div class="container">
-    <div
+
+  <v-skeleton-loader
+     boilerplate
+     v-if="loading"
+     :loading="loading"
+     class="skeleton-loading"
+     type="table-heading, list-item-two-line, image, table-tfoot">
+  </v-skeleton-loader>
+  
+  <!-- content -->
+  <div
+      v-if="movie?.data.backdrop_path && !loading"
       class="movie-detail bg-wrapper"
       :style="{ 'background-image': 'url(' + baseIMGUrlOriginal + movie?.data.backdrop_path + ')' }"
     >
@@ -49,6 +64,7 @@ onMounted(() => {
         <div class="flex-container">
           <div class="detail-image">
             <img
+              v-if="movie?.data.poster_path"
               class="img-fluid"
               :src="baseIMGUrlW500 + movie?.data.poster_path"
               :alt="movie?.data.title + ' ' + '(' + movie?.data.original_title + ')'"
