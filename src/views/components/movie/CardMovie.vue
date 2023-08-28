@@ -1,33 +1,33 @@
 <script setup>
-defineProps(['nowPlaying', 'movieGenres']);
+defineProps(['movies', 'movieGenres']);
 </script>
 
 <template>
   <div class="carousel__item">
-    <div class="position-relative card" style="width: 18rem">
+    <div class="position-relative card" style="width: 18rem" v-if="movies.poster_path">
       <img
-        :src="'https://image.tmdb.org/t/p/w500' + nowPlaying.poster_path"
+        :src="'https://image.tmdb.org/t/p/w500' + movies.poster_path"
         class="card-img-top"
-        :alt="nowPlaying.title + ' ' + '(' + nowPlaying.original_title + ')'"
+        :alt="movies.title + ' ' + '(' + movies.original_title + ')'"
       />
 
       <!-- genre -->
       <div class="position-absolute genre-list">
-        <template v-for="(genre, indexGenre) in nowPlaying.genre_ids" :key="indexGenre">
+        <template v-for="(genre, indexGenre) in movies.genre_ids" :key="indexGenre">
           <span class="badge">
-            {{ movieGenres.genres.find((genreList) => genreList.id === genre).name }}
+            {{ movieGenres.genres.find((genreList) => genreList.id === genre)?.name }}
           </span>
         </template>
       </div>
 
       <!-- percentage -->
       <div class="position-absolute rating">
-        <span> {{ Math.round( (nowPlaying.vote_average * 100) / 10) }}% </span>
+        <span> {{ Math.round( (movies.vote_average * 100) / 10) }}% </span>
       </div>
 
       <!-- button -->
       <div class="position-absolute btn-wrapper">
-        <router-link :to="{ name: 'movie_detail', params: { id: nowPlaying.id } }">
+        <router-link :to="{ name: 'movie_detail', params: { id: movies.id } }">
           <button class="btn btn-detail-movie">
             <i class="bi bi-camera-reels"></i>
           </button>
@@ -38,7 +38,7 @@ defineProps(['nowPlaying', 'movieGenres']);
 </template>
 
 <style scoped>
-@import '../../../../assets/owlCarousel.css';
+@import '../../../assets/owlCarousel.css';
 
 .card {
   border: 1px solid white;

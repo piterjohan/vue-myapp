@@ -1,4 +1,4 @@
-const days = 1;
+const DAYS = 1;
 const TTL = 24 * 60 * 60 * 1000;
 
 function localStorageExpired (storageName, dataLocalStorage) {
@@ -28,11 +28,11 @@ function getStorage(storageName) {
   return localStorageExpired(storageName, ls);
 }
 
-function setStorage(storageName, data) {
+function setStorage(storageName, data, expiredDay = DAYS) {
   console.log('success set storage');
 
   const now = new Date();
-  data = {'expired': now.getTime() + days + TTL, data };
+  data = {'expired': now.getTime() + expiredDay + TTL, data };
   
   localStorage.setItem(storageName, JSON.stringify(data));
 }

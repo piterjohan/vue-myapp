@@ -1,44 +1,31 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { movieByIDAPI, movieVideoAPI } from '../../../api_list/tmdb/movieList';
+import { tvByIDAPI } from '../../../api_list/tmdb/movieList';
 import { formatDate } from '../../../utils/date';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const movieId = route.params.id;
+const tvId = route.params.id;
 
 let loading = ref(true);
-let trailerLoading = ref(true);
 const baseIMGUrlOriginal = import.meta.env.VITE_IMG_URL_ORIGINAL;
 const baseIMGUrlW500 = import.meta.env.VITE_IMG_URL_w500;
-const baseEmbedYT = import.meta.env.VITE_YT_URL_EMBED;
 
-const movie = ref();
-const video = ref();
+const tv = ref();
 let releaseDate = '';
 
 onMounted(async () => {
-  await movieByIDAPI(movieId)
+  await tvByIDAPI(tvId)
     .then((response) => {
-      movie.value = response;
-      releaseDate = formatDate(movie.value.data.release_date);
+      tv.value = response;
+      console.log(response);
+      releaseDate = formatDate(tv.value.data.first_air_date);
       loading.value = false;
     })
     .catch((e) => {
-      console.log('movieByIDAPI');
+      console.log('tvByIDAPI');
       console.log(e);
-      loading.value = false;
-    });
-
-  await movieVideoAPI(movieId)
-  .then((response) => {
-      video.value = response.data;
-      trailerLoading.value = false;
-    })
-    .catch((e) => {
-      console.log('movieVideoAPI');
-      console.log(e);
-      trailerLoading.value = true;
+      loading.value = true;
     });
 });
 
@@ -57,9 +44,9 @@ onMounted(async () => {
 
     <!-- content -->
     <div
-      v-if="movie?.data.backdrop_path && !loading"
+      v-if="tv?.data.backdrop_path && !loading"
       class="movie-detail bg-wrapper"
-      :style="{ 'background-image': 'url(' + baseIMGUrlOriginal + movie?.data.backdrop_path + ')' }"
+      :style="{ 'background-image': 'url(' + baseIMGUrlOriginal + tv?.data.backdrop_path + ')' }"
     >
       <div class="flex back-button">
         <router-link to="/movie">
@@ -78,26 +65,26 @@ onMounted(async () => {
         <div class="flex-container">
           <div class="detail-image">
             <img
-              v-if="movie?.data.poster_path"
+              v-if="tv?.data.poster_path"
               class="img-fluid"
-              :src="baseIMGUrlW500 + movie?.data.poster_path"
-              :alt="movie?.data.title + ' ' + '(' + movie?.data.original_title + ')'"
+              :src="baseIMGUrlW500 + tv?.data.poster_path"
+              :alt="tv?.data.title + ' ' + '(' + tv?.data.original_name + ')'"
             />
           </div>
           <div class="body-detail-movie">
             <div class="title-movie">
-              <a :href="movie?.data.homepage" target="_blank">
-                <h1>{{ movie?.data.title }}</h1>
+              <a :href="tv?.data.homepage" target="_blank">
+                <h1>{{ tv?.data.title }}</h1>
               </a>
             </div>
             <div class="release-date">
               <p>Release Date: {{ releaseDate }}</p>
             </div>
             <div class="rating">
-              <p>Rating: {{ Math.round((movie?.data.vote_average * 100) / 10) }}%</p>
+              <p>Rating: {{ Math.round((tv?.data.vote_average * 100) / 10) }}%</p>
             </div>
             <div class="genre">
-              <template v-for="(genre, indexGenre) in movie?.data.genres" :key="indexGenre">
+              <template v-for="(genre, indexGenre) in tv?.data.genres" :key="indexGenre">
                 <p>{{ genre.name }}</p>
               </template>
             </div>
@@ -105,35 +92,13 @@ onMounted(async () => {
             <div class="description-wrapper">
               <h2>Overview</h2>
               <p>
-                {{ movie?.data.overview }}
+                {{ tv?.data.overview }}
               </p>
-            </div>
-
-            <div class="trailer-video my-3">
-              <v-skeleton-loader
-                boilerplate
-                v-if="trailerLoading"
-                :loading="trailerLoading"
-                class="skeleton-loading"
-                type="image"
-              >
-              </v-skeleton-loader>
-
-              <iframe
-                v-if="!trailerLoading"
-                width="100%"
-                height="315"
-                :src="baseEmbedYT + video.results[0].key"
-                frameborder="0"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              >
-              </iframe>
             </div>
 
             <div class="producer-wrapper">
               <template
-                v-for="(producer, indexProducer) in movie?.data.production_companies"
+                v-for="(producer, indexProducer) in tv?.data.production_companies"
                 :key="indexProducer"
               >
                 <div class="producer-logo" v-if="producer.logo_path">

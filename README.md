@@ -19,8 +19,9 @@ copy env.example to .env
 ```sh
 VITE_MOV_URL="TMDB_URL"
 VITE_MOV_KEY="TMDB_KEY"
-VITE_IMG_URL_ORIGINAL="TMDB_URL_ORIGINAL_IMAGE"
-VITE_IMG_URL_w500="TMDB_URL_ORIGINAL_IMAGE_W500"
+VITE_IMG_URL_ORIGINAL="https://image.tmdb.org/t/p/original/"
+VITE_IMG_URL_w500="https://image.tmdb.org/t/p/w500/"
+VITE_YT_URL_EMBED="https://www.youtube.com/embed/"
 ```
 
 ### Install Depedencies
